@@ -1,22 +1,17 @@
 import React, { useRef, useState } from "react";
-import firebase from "firebase/compat/app";
-import { getAuth } from 'firebase/auth';
+
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 
 import ChatMessage from "./ChatMessage";
 
-const auth = getAuth();
-const db = getFirestore();
+import { Query, messageRef, auth, db } from "../Backend/Firebase";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 
 const ChatRoom = () => {
 
     const dummy = useRef();
-    const messageRef  = collection(db, 'messages');
-    const query = messageRef.orderBy('createdAt').limit(25);
-    // const snapShot = await getDocs(messageRef);
 
-    const [messages] = useCollectionData(query, {idField: 'id'});
+    const [messages] = useCollectionData(Query, {idField: 'id'});
 
     const [formValue, setFormValue] = useState('');
 
@@ -24,11 +19,10 @@ const ChatRoom = () => {
         e.preventDefault();
         const { uid, photoUrl } = auth.currentUser;
         
-        await messageRef.add({
+        await setDoc(doc(db,"messages",Timestamp.now().toString()), {
             text: formValue,
-            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            createdAt: Timestamp.now(),
             uid,
-            photoUrl
         });
 
         setFormValue('');
@@ -43,7 +37,7 @@ const ChatRoom = () => {
             <div ref={dummy}></div>
             <form onSubmit={sendMessage}>
                 <input value={formValue} onChange={(e) => setFormValue(e.target.value)}/>
-                <button type="submit">send</button>
+                <button type="submit" disabled={!formValue}>🕊️</button>
             </form>
         </div>
     );

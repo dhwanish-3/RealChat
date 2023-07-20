@@ -1,12 +1,9 @@
-import { signOut } from "firebase/auth";
-import firebase from "react";
-
-const auth = firebase.auth();
+import { auth } from "../Backend/Firebase";
 
 const SignOut = () => {
     return auth.currentUser && (
-        <button onClick={() => auth.signOut()}>Sign Out</button>
+        <button className="sign-out" onClick={() => auth.signOut()}>Sign Out</button>
     );
 }
 
-export default signOut;
+export default SignOut;

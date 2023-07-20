@@ -1,7 +1,4 @@
-import firebase from 'firebase/compat/app';
-import { getAuth } from 'firebase/auth';
-
-const auth = getAuth();
+import { auth } from "../Backend/Firebase";
 
 const ChatMessage = (props) => {
     const { text, uid, photoUrl} = props.message;
