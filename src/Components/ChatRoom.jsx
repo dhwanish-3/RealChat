@@ -10,31 +10,29 @@ import { doc, setDoc, Timestamp } from "firebase/firestore";
 import Filter from "bad-words";
 
 let badCount = 0;
-let Instruction = "say something nice";
 let ban = false;
 
 const ChatRoom = () => {
 
+    const [Instruction, setInstruction] = useState("say something nice");
     useState(async() =>{
         ban =  await isBanned();
         console.log(ban);
         if (ban) {
             console.log("Setting ..");
-            Instruction = "You have been banned for life.";
+            setInstruction("You have been banned for life.");
         }
     });
 
     useEffect(() => {
-        if (ban) {
-            Instruction = "You have been banned for life.";
-        } else if (badCount == 1) {
-            Instruction = "Please be respectful to others";
+        if (badCount == 1) {
+            setInstruction("Please be respectful to others");
             console.log("1 = count");
         } else if (badCount == 2) {
-            Instruction = "You have been warned...";
+            setInstruction("You have been warned...");
             console.log("2 = count");
         } else if (badCount >= 2) {
-            Instruction = "You have been banned for life.";
+            setInstruction("You have been banned for life.");
             ban = true;
             console.log("3 = count");
             banEvilUser();
@@ -45,7 +43,7 @@ const ChatRoom = () => {
     const detectEvilUser = async (text) => {
         console.log(ban);
         if (ban) {
-            Instruction = "You have been banned for life.";
+            setInstruction("You have been banned for life.");
             console.log("You were banned already");
             return true;
         }
@@ -57,7 +55,7 @@ const ChatRoom = () => {
             console.log("badword count = ",badCount);
             return true;
         } else {
-            Instruction = "say something nice";
+            setInstruction("say something nice");
             return false;
         }
     }
