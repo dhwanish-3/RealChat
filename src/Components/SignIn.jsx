@@ -1,23 +1,11 @@
 import React from "react";
-import firebase from "firebase/compat/app";
-import 'firebase/firestore';
-import 'firebase/auth';
-
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-
-const provider = new GoogleAuthProvider();
+import { signInWithGoogle } from "../Backend/Firebase";
 
 const SignIn = () => {
-    const auth  = getAuth();
-
-    const signInWithGoogle = () => {
-        // var provider = new firebase.auth.GoogleAuthProvider();
-        signInWithPopup(auth, provider);
-    }
-    
     return (
         <div>
-            <button onClick={signInWithGoogle}>Sign in with Google</button>
+            <button className="sign-in" onClick={signInWithGoogle}>Sign in with Google</button>
+            <p style={{marginLeft: "12%",marginRight:"10%"}}>Do not violate the community guidelines or you will be banned for life!</p>
         </div>
     );
 }
