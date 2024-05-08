@@ -1,35 +1,40 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
-import Credentials from '../private/Credentials';
-import { collection, getDoc, getFirestore, limitToLast } from 'firebase/firestore'; 
-import { query, orderBy } from "firebase/firestore";
-import { doc, setDoc } from "firebase/firestore";
+import { initializeApp } from "firebase/app";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
+import {
+  collection,
+  doc,
+  getDoc,
+  getFirestore,
+  limitToLast,
+  orderBy,
+  query,
+  setDoc,
+} from "firebase/firestore";
+import Credentials from "../private/Credentials";
 
 const app = initializeApp(Credentials);
 
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const messageRef = collection(db, 'messages');
+const messageRef = collection(db, "messages");
 
-const Query = query(messageRef, orderBy('createdAt'), limitToLast(50));
+const Query = query(messageRef, orderBy("createdAt"), limitToLast(50));
 
 const provider = new GoogleAuthProvider();
 
-
 const signInWithGoogle = async () => {
   try {
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-
+    await signInWithPopup(auth, provider);
+    // const user = result.user;
   } catch (error) {
-    console.error('Google sign-in error:', error);
+    console.error("Google sign-in error:", error);
   }
 };
 
 const banEvilUser = async () => {
   await setDoc(doc(db, "banned", auth.currentUser.uid), {});
-}
+};
 
 const isBanned = async () => {
   const bannedRef = doc(db, "banned", auth.currentUser.uid);
@@ -42,15 +47,15 @@ const isBanned = async () => {
     console.log("Not banned");
     return false;
   }
-}
+};
 
 export {
-    app,
-    auth,
-    db,
-    Query,
-    messageRef,
-    signInWithGoogle,
-    banEvilUser,
-    isBanned
-}
+  Query,
+  app,
+  auth,
+  banEvilUser,
+  db,
+  isBanned,
+  messageRef,
+  signInWithGoogle,
+};
